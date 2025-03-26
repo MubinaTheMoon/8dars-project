@@ -1,14 +1,20 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import MainLayouts from "./layouts/MainLayouts";
 import { Create, Home, Login, Register } from "./pages";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import { useSelector } from "react-redux";
 
 function App() {
+  const { user } = useSelector((store) => store.user);
   const routes = createBrowserRouter([
     {
       path: "/",
       element: (
-        <ProtectedRoutes user={true}>
+        <ProtectedRoutes user={user}>
           <MainLayouts />
         </ProtectedRoutes>
       ),
@@ -24,12 +30,12 @@ function App() {
       ],
     },
     {
-      path: "login",
-      element: <Login />,
+      path: "/login",
+      element: user ? <Navigate to={"/"} /> : <Login />,
     },
     {
-      path: "register",
-      element: <Register />,
+      path: "/register",
+      element: user ? <Navigate to={"/"} /> : <Register />,
     },
   ]);
   return <RouterProvider router={routes} />;
